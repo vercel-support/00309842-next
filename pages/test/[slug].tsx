@@ -16,6 +16,10 @@ export default function TestPage({ slug, retry }: PageProps) {
   );
 
   if (retry && router.isReady) {
+    if (Number(retryCount) >= 3) {
+      router.push('/error');
+      return null;
+    }
     const newRetryCount = Number(retryCount || 0) + 1;
     router.push(`/test/${slug}?retryCount=${newRetryCount}`);
   }
@@ -57,6 +61,9 @@ export const getStaticProps: GetStaticProps = async ({
   }
 
   return {
-    props: { slug },
+    props: {
+      slug,
+      retry: true, // retry: true if the request to get the blog data failed
+    },
   };
 };
